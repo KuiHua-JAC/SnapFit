@@ -1,20 +1,23 @@
-package com.example.snapfit.views.authentication.home
+package com.example.snapfit.views.authentication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.snapfit.MyApp
-import com.example.snapfit.entities.authentication.AuthRepository
+import com.example.snapfit.entities.authentication.IAuthRepository
 import com.example.snapfit.entities.authentication.ResultAuth
 import com.example.snapfit.entities.authentication.User
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
+/**
+* AuthViewModel handles authentication operations and updates UI through StateFlows.
+ */
+
+class AuthViewModel(private val authRepository: IAuthRepository) : ViewModel() {
     private val _signInResult = MutableStateFlow<ResultAuth<Boolean>?>(ResultAuth.Inactive)
     private val _signUpResult = MutableStateFlow<ResultAuth<Boolean>?>(ResultAuth.Inactive)
     private val _signOutResult = MutableStateFlow<ResultAuth<Boolean>?>(ResultAuth.Inactive)
@@ -93,7 +96,6 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun delete() {
         _deleteAccountResult.value = ResultAuth.InProgress
         viewModelScope.launch(Dispatchers.IO) {
-            delay(3000) // TODO: Remove.  Only here to demonstrate inprogress snackbar
             try {
                 val success = authRepository.delete()
                 _deleteAccountResult.value = ResultAuth.Success(success)
@@ -109,7 +111,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     }
 }
 
-/* ViewModel Factory that will create our view model by injecting the
+/* ViewModel Factory that will create our view MainScreenViewModel by injecting the
       authRepository from the module.
  */
 class AuthViewModelFactory : ViewModelProvider.Factory {

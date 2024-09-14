@@ -2,9 +2,12 @@ package com.example.snapfit.entities.authentication
 
 import kotlinx.coroutines.flow.StateFlow
 
-interface AuthRepository {
-    // Return a StateFlow so that the composable can always update when
-    //   the current authorized user status changes for any reason
+/**
+ *  Return a StateFlow so that the composable can always update when
+ *  the current authorized user status changes for any reason
+ */
+
+interface IAuthRepository {
     fun currentUser(): StateFlow<User?>
 
     suspend fun signUp(
